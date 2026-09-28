@@ -8,6 +8,9 @@
 static_assert(sizeof(Vec3) == 3 * sizeof(float), "Vec3 must have no padding");
 static_assert(std::is_trivially_copyable_v<Vec3>);
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                           Unit Tests                                           //
+////////////////////////////////////////////////////////////////////////////////////////////////////
 TEST_CASE("[] operator returns the correct element") {
     Vec3 v(27, 55, 82);
     float v_x = v[0];
