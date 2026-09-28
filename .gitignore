@@ -27,3 +27,6 @@ callgrind.out.*
 *.swp
 .DS_Store
 Thumbs.db
+
+# Claude files
+.claude/*

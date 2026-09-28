@@ -7,10 +7,10 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(doctest)
 
-# Add new test files here as you write them (test_vec3.cpp, test_intersect.cpp, ...).
 add_executable(rt_tests
   test_main.cpp
   test_image.cpp
+  test_vec3.cpp
 )
 target_link_libraries(rt_tests PRIVATE rt_core doctest::doctest)
 rt_set_options(rt_tests)
