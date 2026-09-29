@@ -1,8 +1,8 @@
 #pragma once
 #include <algorithm>
+#include <cassert>
 #include <cmath>
 #include <cstddef>
-#include <stdexcept>
 
 namespace rt {
 class Vec3 {
@@ -31,27 +31,27 @@ public:
     float get_z() const { return z; }
 
     float& operator[](std::size_t index) {
+        assert(index < 3);
         switch (index) {
             case 0:
                 return x;
             case 1:
                 return y;
-            case 2:
+            default:
                 return z;
         }
-        throw std::out_of_range("Index out of bounds.");
     }
 
     const float& operator[](std::size_t index) const {
+        assert(index < 3);
         switch (index) {
             case 0:
                 return x;
             case 1:
                 return y;
-            case 2:
+            default:
                 return z;
         }
-        throw std::out_of_range("Index out of bounds.");
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -85,7 +85,7 @@ public:
     // ========================================================================================== //
     //                                   Scalar Multiplication                                    //
     // ========================================================================================== //
-    Vec3& operator*=(const float& scalar) {
+    Vec3& operator*=(float scalar) {
         this->x *= scalar;
         this->y *= scalar;
         this->z *= scalar;
@@ -147,6 +147,8 @@ public:
 
     // ========================================================================================== //
     //                                        Unit Vector                                         //
+    // ------------------------------------------------------------------------------------------ //
+    //                      Returns the original vector when the length is 0                      //
     // ========================================================================================== //
     Vec3 unit_vector() const {
         float length = this->length();
@@ -155,9 +157,11 @@ public:
 
     // ========================================================================================== //
     //                                        Reflection                                          //
+    // ------------------------------------------------------------------------------------------ //
+    //                               Normal should be a unit vector                               //
     // ========================================================================================== //
     Vec3 reflection(const Vec3& normal) const {
-        return *this - 2 * ((this->dot_product(normal) / normal.squared_length())) * normal;
+        return *this - 2 * (this->dot_product(normal)) * normal;
     }
 
     // ========================================================================================== //
@@ -165,6 +169,7 @@ public:
     // ------------------------------------------------------------------------------------------ //
     //                     Incoming vector and normal should be unit vectors                      //
     //                        Normal must point against the incoming ray                          //
+    //                     Returns the 0 vector on total internal reflection                      //
     // ========================================================================================== //
     Vec3 refraction(const Vec3& normal, float refractionIndexRatio) const {
         float c = -normal.dot_product(*this);

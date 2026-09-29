@@ -25,6 +25,18 @@ TEST_CASE("[] operator returns the correct element") {
     CHECK(v_z == 82.0);
 }
 
+TEST_CASE("[] non-const operator returns the correct element and allows updates") {
+    rt::Vec3 v(27, 55, 82);
+    v[0] = 34;
+    float v_x = v[0];
+    float v_y = v[1];
+    float v_z = v[2];
+
+    CHECK(v_x == 34.0);
+    CHECK(v_y == 55.0);
+    CHECK(v_z == 82.0);
+}
+
 TEST_CASE("Negation returns the negative of each element") {
     rt::Vec3 v(27, 55, 82);
     rt::Vec3 v_neg = -v;
@@ -179,30 +191,46 @@ TEST_CASE("Length returns the correct value") {
     rt::Vec3 v1(27, 55, 82);
     float length = v1.length();
 
-    CHECK(std::round(length * 100.0) / 100.0 == 102.36);
+    CHECK(length == doctest::Approx(sqrtf(10478)));
 }
 
 TEST_CASE("Unit vector returns the correct vector") {
     rt::Vec3 v1(27, 55, 82);
     rt::Vec3 unit_vector = v1.unit_vector();
 
-    CHECK(std::round(unit_vector[0] * 100.0) / 100.0 == 0.26);
-    CHECK(std::round(unit_vector[1] * 100.0) / 100.0 == 0.54);
-    CHECK(std::round(unit_vector[2] * 100.0) / 100.0 == 0.80);
-    CHECK(unit_vector.length() == 1.0);
+    float length = sqrtf((27 * 27) + (55 * 55) + (82 * 82));
+
+    CHECK(unit_vector[0] == doctest::Approx(27 / length));
+    CHECK(unit_vector[1] == doctest::Approx(55 / length));
+    CHECK(unit_vector[2] == doctest::Approx(82 / length));
+    CHECK(unit_vector.length() == doctest::Approx(1.0));
+}
+
+TEST_CASE("Reflection returns the correct ray") {
+    rt::Vec3 ray(-0.5, -0.5, 0);
+
+    rt::Vec3 reflected_ray = ray.reflection(rt::Vec3(0, 1, 0));
+
+    CHECK(reflected_ray[0] == -0.5);
+    CHECK(reflected_ray[1] == 0.5);
+    CHECK(reflected_ray[2] == 0);
+    CHECK(reflected_ray.length() == doctest::Approx(ray.length()));
 }
 
 TEST_CASE("Refraction returns the correct ray") {
     rt::Vec3 incoming_ray(1, -1, 0);
     rt::Vec3 normal(0, 1, 0);
+    incoming_ray = incoming_ray.unit_vector();
     float ratio = 1.0f / 1.5f;
 
-    incoming_ray = incoming_ray.unit_vector();
+    float theta_i = acosf(std::abs(incoming_ray.dot_product(normal)));
+    float theta_t = asinf(ratio * sinf(theta_i));
+
     rt::Vec3 refracted_ray = incoming_ray.refraction(normal, ratio);
 
-    CHECK(std::round(refracted_ray[0] * 100.0) / 100.0 == 0.47);
-    CHECK(std::round(refracted_ray[1] * 100.0) / 100.0 == -0.88);
-    CHECK(std::round(refracted_ray[2] * 100.0) / 100.0 == 0);
+    CHECK(refracted_ray[0] == doctest::Approx(sinf(theta_t)));
+    CHECK(refracted_ray[1] == doctest::Approx(-cosf(theta_t)));
+    CHECK(refracted_ray[2] == doctest::Approx(0));
 }
 
 TEST_CASE("Total internal reflection returns the zero vector") {
