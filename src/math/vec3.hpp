@@ -4,13 +4,14 @@
 #include <cstddef>
 #include <stdexcept>
 
+namespace rt {
 class Vec3 {
     float x;
     float y;
     float z;
 
 public:
-    // ========================================================================================== //
+    // ========================================================================================== //                                                                                            //
     //                                        Constructors                                        //
     // ========================================================================================== //
 
@@ -25,9 +26,9 @@ public:
     // ========================================================================================== //
     //                                       Element Access                                       //
     // ========================================================================================== //
-    float getX() const { return x; };
-    float getY() const { return y; };
-    float getZ() const { return z; };
+    float get_x() const { return x; };
+    float get_y() const { return y; };
+    float get_z() const { return z; };
 
     float& operator[](std::size_t index) {
         switch (index) {
@@ -162,15 +163,19 @@ public:
     // ========================================================================================== //
     //                                        Refraction                                          //
     // ========================================================================================== //
-    Vec3 refraction(const Vec3& normal, float refractionIndexRatio) const {
-        float c = -normal.dot_product(*this);
+    Vec3 refraction(Vec3 normal, float refractionIndexRatio) const {
+        // Ensure that the incoming vector and normal are unit vectors
+        Vec3 incoming_vector = this->unit_vector();
+        normal = normal.unit_vector();
+
+        float c = -normal.dot_product(incoming_vector);
         float discriminant = 1 - (refractionIndexRatio * refractionIndexRatio) * (1 - c * c);
 
         if (discriminant < 0) {
             return Vec3(0, 0, 0);
         }
 
-        return refractionIndexRatio * *this +
+        return refractionIndexRatio * incoming_vector +
                (refractionIndexRatio * c - std::sqrt(discriminant)) * normal;
     }
 
@@ -229,3 +234,4 @@ inline Vec3 operator*(Vec3 lhs, const Vec3& rhs) {
 
 using Color = Vec3;
 using Point3 = Vec3;
+}  // namespace rt

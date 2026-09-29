@@ -5,7 +5,7 @@
 
 A multithreaded CPU path tracer in modern C++20, built for performance, with an SAH BVH, next event estimation and physically based materials.
 
-![build](https://github.com/<your-username>/raytracer/actions/workflows/build.yml/badge.svg)
+![build](https://github.com/ThashilNaidoo/raytracer/actions/workflows/build.yml/badge.svg)
 
 > **Status:** Week 1 in progress. Sections marked _TODO_ get filled in as the features land.
 

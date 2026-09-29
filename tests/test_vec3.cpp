@@ -5,14 +5,14 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                       Compile Time Tests                                       //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-static_assert(sizeof(Vec3) == 3 * sizeof(float), "Vec3 must have no padding");
-static_assert(std::is_trivially_copyable_v<Vec3>);
+static_assert(sizeof(rt::Vec3) == 3 * sizeof(float), "Vec3 must have no padding");
+static_assert(std::is_trivially_copyable_v<rt::Vec3>);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           Unit Tests                                           //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 TEST_CASE("[] operator returns the correct element") {
-    Vec3 v(27, 55, 82);
+    rt::Vec3 v(27, 55, 82);
     float v_x = v[0];
     float v_y = v[1];
     float v_z = v[2];
@@ -23,8 +23,8 @@ TEST_CASE("[] operator returns the correct element") {
 }
 
 TEST_CASE("Negation returns the negative of each element") {
-    Vec3 v(27, 55, 82);
-    Vec3 v_neg = -v;
+    rt::Vec3 v(27, 55, 82);
+    rt::Vec3 v_neg = -v;
 
     CHECK(v_neg[0] == -v[0]);
     CHECK(v_neg[1] == -v[1]);
@@ -32,8 +32,8 @@ TEST_CASE("Negation returns the negative of each element") {
 }
 
 TEST_CASE("Operator += adds the 2 vectors") {
-    Vec3 v1(27, 55, 82);
-    Vec3 v2(34, 2, 64);
+    rt::Vec3 v1(27, 55, 82);
+    rt::Vec3 v2(34, 2, 64);
 
     v1 += v2;
 
@@ -43,10 +43,10 @@ TEST_CASE("Operator += adds the 2 vectors") {
 }
 
 TEST_CASE("Operator + adds the 2 vectors and returns the sum") {
-    Vec3 v1(27, 55, 82);
-    Vec3 v2(34, 2, 64);
+    rt::Vec3 v1(27, 55, 82);
+    rt::Vec3 v2(34, 2, 64);
 
-    Vec3 v3 = v1 + v2;
+    rt::Vec3 v3 = v1 + v2;
 
     CHECK(v3[0] == 61);
     CHECK(v3[1] == 57);
@@ -54,8 +54,8 @@ TEST_CASE("Operator + adds the 2 vectors and returns the sum") {
 }
 
 TEST_CASE("Operator -= subtracts the 2 vectors") {
-    Vec3 v1(27, 55, 82);
-    Vec3 v2(34, 2, 64);
+    rt::Vec3 v1(27, 55, 82);
+    rt::Vec3 v2(34, 2, 64);
 
     v1 -= v2;
 
@@ -65,10 +65,10 @@ TEST_CASE("Operator -= subtracts the 2 vectors") {
 }
 
 TEST_CASE("Operator - subtracts the 2 vectors and returns the difference") {
-    Vec3 v1(27, 55, 82);
-    Vec3 v2(34, 2, 64);
+    rt::Vec3 v1(27, 55, 82);
+    rt::Vec3 v2(34, 2, 64);
 
-    Vec3 v3 = v1 - v2;
+    rt::Vec3 v3 = v1 - v2;
 
     CHECK(v3[0] == -7);
     CHECK(v3[1] == 53);
@@ -76,7 +76,7 @@ TEST_CASE("Operator - subtracts the 2 vectors and returns the difference") {
 }
 
 TEST_CASE("Operator *= multiplies the vector with the scalar") {
-    Vec3 v1(27, 55, 82);
+    rt::Vec3 v1(27, 55, 82);
 
     v1 *= 2;
 
@@ -86,9 +86,9 @@ TEST_CASE("Operator *= multiplies the vector with the scalar") {
 }
 
 TEST_CASE("Operator * multiplies the vector with the scalar on the right") {
-    Vec3 v1(27, 55, 82);
+    rt::Vec3 v1(27, 55, 82);
 
-    Vec3 v2 = v1 * 2;
+    rt::Vec3 v2 = v1 * 2;
 
     CHECK(v2[0] == 54);
     CHECK(v2[1] == 110);
@@ -96,9 +96,9 @@ TEST_CASE("Operator * multiplies the vector with the scalar on the right") {
 }
 
 TEST_CASE("Operator * multiplies the vector with the scalar on the left") {
-    Vec3 v1(27, 55, 82);
+    rt::Vec3 v1(27, 55, 82);
 
-    Vec3 v2 = 2 * v1;
+    rt::Vec3 v2 = 2 * v1;
 
     CHECK(v2[0] == 54);
     CHECK(v2[1] == 110);
@@ -106,7 +106,7 @@ TEST_CASE("Operator * multiplies the vector with the scalar on the left") {
 }
 
 TEST_CASE("Operator /= divides the vector with the scalar") {
-    Vec3 v1(27, 55, 82);
+    rt::Vec3 v1(27, 55, 82);
 
     v1 /= 2;
 
@@ -116,9 +116,9 @@ TEST_CASE("Operator /= divides the vector with the scalar") {
 }
 
 TEST_CASE("Operator / divides the vector with the scalar on the right") {
-    Vec3 v1(27, 55, 82);
+    rt::Vec3 v1(27, 55, 82);
 
-    Vec3 v2 = v1 / 2;
+    rt::Vec3 v2 = v1 / 2;
 
     CHECK(v2[0] == 13.5);
     CHECK(v2[1] == 27.5);
@@ -126,8 +126,8 @@ TEST_CASE("Operator / divides the vector with the scalar on the right") {
 }
 
 TEST_CASE("Operator *= multiplies the 2 vectors' components") {
-    Vec3 v1(27, 55, 82);
-    Vec3 v2(2, 3, 10);
+    rt::Vec3 v1(27, 55, 82);
+    rt::Vec3 v2(2, 3, 10);
 
     v1 *= v2;
 
@@ -137,10 +137,10 @@ TEST_CASE("Operator *= multiplies the 2 vectors' components") {
 }
 
 TEST_CASE("Operator * multiplies the 2 vectors' components and returns the product") {
-    Vec3 v1(27, 55, 82);
-    Vec3 v2(2, 3, 10);
+    rt::Vec3 v1(27, 55, 82);
+    rt::Vec3 v2(2, 3, 10);
 
-    Vec3 v3 = v1 * v2;
+    rt::Vec3 v3 = v1 * v2;
 
     CHECK(v3[0] == 54);
     CHECK(v3[1] == 165);
@@ -148,17 +148,17 @@ TEST_CASE("Operator * multiplies the 2 vectors' components and returns the produ
 }
 
 TEST_CASE("Dot product returns the correct value") {
-    Vec3 v1(27, 55, 82);
-    Vec3 v2(2, 3, 10);
+    rt::Vec3 v1(27, 55, 82);
+    rt::Vec3 v2(2, 3, 10);
     float dot_product_value = v1.dot_product(v2);
 
     CHECK(dot_product_value == 1039);
 }
 
 TEST_CASE("Cross product returns the correct vector") {
-    Vec3 v1(27, 55, 82);
-    Vec3 v2(2, 3, 10);
-    Vec3 v3 = v1.cross_product(v2);
+    rt::Vec3 v1(27, 55, 82);
+    rt::Vec3 v2(2, 3, 10);
+    rt::Vec3 v3 = v1.cross_product(v2);
 
     CHECK(v3[0] == 304);
     CHECK(v3[1] == -106);
@@ -166,22 +166,22 @@ TEST_CASE("Cross product returns the correct vector") {
 }
 
 TEST_CASE("Squared length returns the correct value") {
-    Vec3 v1(27, 55, 82);
+    rt::Vec3 v1(27, 55, 82);
     float squared_length = v1.squared_length();
 
     CHECK(squared_length == 10478);
 }
 
 TEST_CASE("Length returns the correct value") {
-    Vec3 v1(27, 55, 82);
+    rt::Vec3 v1(27, 55, 82);
     float length = v1.length();
 
     CHECK(std::round(length * 100.0) / 100.0 == 102.36);
 }
 
 TEST_CASE("Unit vector returns the correct vector") {
-    Vec3 v1(27, 55, 82);
-    Vec3 unit_vector = v1.unit_vector();
+    rt::Vec3 v1(27, 55, 82);
+    rt::Vec3 unit_vector = v1.unit_vector();
 
     CHECK(std::round(unit_vector[0] * 100.0) / 100.0 == 0.26);
     CHECK(std::round(unit_vector[1] * 100.0) / 100.0 == 0.54);
@@ -190,10 +190,10 @@ TEST_CASE("Unit vector returns the correct vector") {
 }
 
 TEST_CASE("Component wise minimum returns the correct vector") {
-    Vec3 v1(2, 55, 82);
-    Vec3 v2(27, 3, 10);
+    rt::Vec3 v1(2, 55, 82);
+    rt::Vec3 v2(27, 3, 10);
 
-    Vec3 min = v1.component_wise_minimum(v2);
+    rt::Vec3 min = v1.component_wise_minimum(v2);
 
     CHECK(min[0] == 2);
     CHECK(min[1] == 3);
@@ -201,10 +201,10 @@ TEST_CASE("Component wise minimum returns the correct vector") {
 }
 
 TEST_CASE("Component wise maximum returns the correct vector") {
-    Vec3 v1(2, 55, 82);
-    Vec3 v2(27, 3, 10);
+    rt::Vec3 v1(2, 55, 82);
+    rt::Vec3 v2(27, 3, 10);
 
-    Vec3 max = v1.component_wise_maximum(v2);
+    rt::Vec3 max = v1.component_wise_maximum(v2);
 
     CHECK(max[0] == 27);
     CHECK(max[1] == 55);
