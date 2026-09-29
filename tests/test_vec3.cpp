@@ -10,6 +10,20 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static_assert(sizeof(rt::Vec3) == 3 * sizeof(float), "Vec3 must have no padding");
 static_assert(std::is_trivially_copyable_v<rt::Vec3>);
+static_assert(rt::Vec3(1, 2, 0).get_x() == 1);
+static_assert(rt::Vec3(1, 2, 0).get_y() == 2);
+static_assert(rt::Vec3(1, 2, 0).get_z() == 0);
+static_assert(rt::Vec3().get_x() == 0);
+static_assert(rt::Vec3().get_y() == 0);
+static_assert(rt::Vec3().get_z() == 0);
+static_assert(rt::Vec3(1, 2, 0)[0] == 1);
+static_assert(rt::Vec3(1, 2, 0)[1] == 2);
+static_assert(rt::Vec3(1, 2, 0)[2] == 0);
+static_assert([]() {
+    rt::Vec3 v(1, 2, 3);
+    v[1] = 4;
+    return v.get_x() == 1 && v.get_y() == 4 && v.get_z() == 3;
+}());
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           Unit Tests                                           //

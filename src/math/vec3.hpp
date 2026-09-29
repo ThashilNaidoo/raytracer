@@ -15,22 +15,18 @@ public:
     //                                        Constructors                                        //
     // ========================================================================================== //
 
-    Vec3() {
-        x = 0.0;
-        y = 0.0;
-        z = 0.0;
-    }
+    constexpr Vec3() noexcept : x(0.0f), y(0.0f), z(0.0f) {}
 
-    Vec3(float x_, float y_, float z_) : x(x_), y(y_), z(z_) {}
+    constexpr Vec3(float x_, float y_, float z_) noexcept : x(x_), y(y_), z(z_) {}
 
     // ========================================================================================== //
     //                                       Element Access                                       //
     // ========================================================================================== //
-    float get_x() const { return x; }
-    float get_y() const { return y; }
-    float get_z() const { return z; }
+    [[nodiscard]] constexpr float get_x() const noexcept { return x; }
+    [[nodiscard]] constexpr float get_y() const noexcept { return y; }
+    [[nodiscard]] constexpr float get_z() const noexcept { return z; }
 
-    float& operator[](std::size_t index) {
+    [[nodiscard]] constexpr float& operator[](std::size_t index) noexcept {
         assert(index < 3);
         switch (index) {
             case 0:
@@ -42,7 +38,7 @@ public:
         }
     }
 
-    const float& operator[](std::size_t index) const {
+    [[nodiscard]] constexpr const float& operator[](std::size_t index) const noexcept {
         assert(index < 3);
         switch (index) {
             case 0:
