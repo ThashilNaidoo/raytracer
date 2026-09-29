@@ -1,3 +1,6 @@
+#include <cmath>
+#include <type_traits>
+
 #include <doctest/doctest.h>
 
 #include "math/vec3.hpp"
@@ -187,6 +190,32 @@ TEST_CASE("Unit vector returns the correct vector") {
     CHECK(std::round(unit_vector[1] * 100.0) / 100.0 == 0.54);
     CHECK(std::round(unit_vector[2] * 100.0) / 100.0 == 0.80);
     CHECK(unit_vector.length() == 1.0);
+}
+
+TEST_CASE("Refraction returns the correct ray") {
+    rt::Vec3 incoming_ray(1, -1, 0);
+    rt::Vec3 normal(0, 1, 0);
+    float ratio = 1.0f / 1.5f;
+
+    incoming_ray = incoming_ray.unit_vector();
+    rt::Vec3 refracted_ray = incoming_ray.refraction(normal, ratio);
+
+    CHECK(std::round(refracted_ray[0] * 100.0) / 100.0 == 0.47);
+    CHECK(std::round(refracted_ray[1] * 100.0) / 100.0 == -0.88);
+    CHECK(std::round(refracted_ray[2] * 100.0) / 100.0 == 0);
+}
+
+TEST_CASE("Total internal reflection returns the zero vector") {
+    rt::Vec3 incoming_ray(1, -0.3f, 0);
+    rt::Vec3 normal(0, 1, 0);
+    float ratio = 1.5;
+
+    incoming_ray = incoming_ray.unit_vector();
+    rt::Vec3 refracted_ray = incoming_ray.refraction(normal, ratio);
+
+    CHECK(refracted_ray[0] == 0);
+    CHECK(refracted_ray[1] == 0);
+    CHECK(refracted_ray[2] == 0);
 }
 
 TEST_CASE("Component wise minimum returns the correct vector") {

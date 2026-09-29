@@ -11,7 +11,7 @@ class Vec3 {
     float z;
 
 public:
-    // ========================================================================================== //                                                                                            //
+    // ========================================================================================== //
     //                                        Constructors                                        //
     // ========================================================================================== //
 
@@ -26,9 +26,9 @@ public:
     // ========================================================================================== //
     //                                       Element Access                                       //
     // ========================================================================================== //
-    float get_x() const { return x; };
-    float get_y() const { return y; };
-    float get_z() const { return z; };
+    float get_x() const { return x; }
+    float get_y() const { return y; }
+    float get_z() const { return z; }
 
     float& operator[](std::size_t index) {
         switch (index) {
@@ -162,20 +162,19 @@ public:
 
     // ========================================================================================== //
     //                                        Refraction                                          //
+    // ------------------------------------------------------------------------------------------ //
+    //                     Incoming vector and normal should be unit vectors                      //
+    //                        Normal must point against the incoming ray                          //
     // ========================================================================================== //
-    Vec3 refraction(Vec3 normal, float refractionIndexRatio) const {
-        // Ensure that the incoming vector and normal are unit vectors
-        Vec3 incoming_vector = this->unit_vector();
-        normal = normal.unit_vector();
-
-        float c = -normal.dot_product(incoming_vector);
+    Vec3 refraction(const Vec3& normal, float refractionIndexRatio) const {
+        float c = -normal.dot_product(*this);
         float discriminant = 1 - (refractionIndexRatio * refractionIndexRatio) * (1 - c * c);
 
         if (discriminant < 0) {
             return Vec3(0, 0, 0);
         }
 
-        return refractionIndexRatio * incoming_vector +
+        return refractionIndexRatio * *this +
                (refractionIndexRatio * c - std::sqrt(discriminant)) * normal;
     }
 
