@@ -146,3 +146,67 @@ TEST_CASE("Operator * multiplies the 2 vectors' components and returns the produ
     CHECK(v3[1] == 165);
     CHECK(v3[2] == 820);
 }
+
+TEST_CASE("Dot product returns the correct value") {
+    Vec3 v1(27, 55, 82);
+    Vec3 v2(2, 3, 10);
+    float dot_product_value = v1.dot_product(v2);
+
+    CHECK(dot_product_value == 1039);
+}
+
+TEST_CASE("Cross product returns the correct vector") {
+    Vec3 v1(27, 55, 82);
+    Vec3 v2(2, 3, 10);
+    Vec3 v3 = v1.cross_product(v2);
+
+    CHECK(v3[0] == 304);
+    CHECK(v3[1] == -106);
+    CHECK(v3[2] == -29);
+}
+
+TEST_CASE("Squared length returns the correct value") {
+    Vec3 v1(27, 55, 82);
+    float squared_length = v1.squared_length();
+
+    CHECK(squared_length == 10478);
+}
+
+TEST_CASE("Length returns the correct value") {
+    Vec3 v1(27, 55, 82);
+    float length = v1.length();
+
+    CHECK(std::round(length * 100.0) / 100.0 == 102.36);
+}
+
+TEST_CASE("Unit vector returns the correct vector") {
+    Vec3 v1(27, 55, 82);
+    Vec3 unit_vector = v1.unit_vector();
+
+    CHECK(std::round(unit_vector[0] * 100.0) / 100.0 == 0.26);
+    CHECK(std::round(unit_vector[1] * 100.0) / 100.0 == 0.54);
+    CHECK(std::round(unit_vector[2] * 100.0) / 100.0 == 0.80);
+    CHECK(unit_vector.length() == 1.0);
+}
+
+TEST_CASE("Component wise minimum returns the correct vector") {
+    Vec3 v1(2, 55, 82);
+    Vec3 v2(27, 3, 10);
+
+    Vec3 min = v1.component_wise_minimum(v2);
+
+    CHECK(min[0] == 2);
+    CHECK(min[1] == 3);
+    CHECK(min[2] == 10);
+}
+
+TEST_CASE("Component wise maximum returns the correct vector") {
+    Vec3 v1(2, 55, 82);
+    Vec3 v2(27, 3, 10);
+
+    Vec3 max = v1.component_wise_maximum(v2);
+
+    CHECK(max[0] == 27);
+    CHECK(max[1] == 55);
+    CHECK(max[2] == 82);
+}
