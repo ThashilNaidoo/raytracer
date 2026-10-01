@@ -11,6 +11,7 @@ add_executable(rt_tests
   test_main.cpp
   test_image.cpp
   test_vec3.cpp
+  test_ray.cpp
 )
 target_link_libraries(rt_tests PRIVATE rt_core doctest::doctest)
 rt_set_options(rt_tests)
