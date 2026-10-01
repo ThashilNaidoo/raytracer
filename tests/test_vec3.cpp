@@ -281,3 +281,24 @@ TEST_CASE("Component wise maximum returns the correct vector") {
     CHECK(max[1] == 55);
     CHECK(max[2] == 82);
 }
+
+TEST_CASE("Near zero check returns true when a component is close to 0") {
+    rt::Vec3 v1(0.000000000000000001f, 0, -0.00000000000000001f);
+
+    CHECK(v1.is_near_zero() == true);
+}
+
+TEST_CASE("Largest component returns the correct index") {
+    rt::Vec3 v1(2, 55, 82);
+
+    CHECK(v1.largest_component() == 2);
+}
+
+TEST_CASE("Approximate equality returns true for 2 vectors that are similar and false otherwise") {
+    rt::Vec3 v1(2, 55, 82);
+    rt::Vec3 v2(2, 55, 82);
+    rt::Vec3 v3(1, 55, 82);
+
+    CHECK(v1.approximate_equality(v2) == true);
+    CHECK(v1.approximate_equality(v3) == false);
+}
