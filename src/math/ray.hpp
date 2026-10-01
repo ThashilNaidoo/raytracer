@@ -14,7 +14,7 @@ public:
     //                           t is the number of direction-lengths                             //
     //                       Will map to world distance if |direction| == 1                       //
     // ========================================================================================== //
-    constexpr Ray() noexcept : origin(0.0f, 0.0f, 0.0f), direction(0.0f, 0.0f, 0.0f) {}
+    Ray() = default;
     constexpr Ray(const Point3& o, const Vec3& d) noexcept : origin(o), direction(d) {}
 
     // ========================================================================================== //
