@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <string>
 
+#include "render/camera.hpp"
 #include "render/image.hpp"
 
 // Pipeline smoke test: renders a gradient so you can confirm the build, PNG
@@ -17,12 +18,19 @@ int main(int argc, char** argv) {
     const auto start = std::chrono::steady_clock::now();
 
     rt::Image image(width, height);
+    rt::Camera camera(width, height);
+    const rt::Color color_bottom(1.0f, 1.0f, 1.0f);
+    const rt::Color color_top(1.0f, 0.5f, 0.2f);
+
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
-            // TODO(week 1): generate a camera ray for (x, y) and trace it.
-            // Sky-style blend: white at the bottom, light blue at the top.
-            const float t = 1.0f - static_cast<float>(y) / static_cast<float>(height - 1);
-            image.at(x, y) = {(1.0f - t) + t * 0.5f, (1.0f - t) + t * 0.7f, 1.0f};
+            rt::Ray curr_ray = camera.get_ray(x, y);
+            rt::Vec3 ray_normalized_direction = curr_ray.get_direction().unit_vector();
+
+            float t = 0.5f * (ray_normalized_direction.get_y() + 1);
+            rt::Color pixel_color = color_bottom.lerp(color_top, t);
+
+            image.at(x, y) = {pixel_color.get_x(), pixel_color.get_y(), pixel_color.get_z()};
         }
     }
 
