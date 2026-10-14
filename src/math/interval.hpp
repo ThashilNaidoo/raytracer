@@ -1,0 +1,9 @@
+#pragma once
+namespace rt {
+struct Interval {
+    float min;
+    float max;
+
+    [[nodiscard]] bool contains(float t) const noexcept { return t >= min && t <= max; }
+};
+}  // namespace rt

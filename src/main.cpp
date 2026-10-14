@@ -1,8 +1,10 @@
 #include <chrono>
 #include <cstdio>
 #include <filesystem>
+#include <limits>
 #include <string>
 
+#include "geometry/sphere.hpp"
 #include "render/camera.hpp"
 #include "render/image.hpp"
 
@@ -22,13 +24,23 @@ int main(int argc, char** argv) {
     const rt::Color color_bottom(1.0f, 1.0f, 1.0f);
     const rt::Color color_top(1.0f, 0.5f, 0.2f);
 
+    const rt::Sphere sphere(rt::Point3(0, 0, -1), 0.5f);
+    const rt::Interval interval(0, std::numeric_limits<float>::infinity());
+
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             rt::Ray curr_ray = camera.get_ray(x, y);
             rt::Vec3 ray_normalized_direction = curr_ray.get_direction().unit_vector();
 
             float t = 0.5f * (ray_normalized_direction.get_y() + 1);
-            rt::Color pixel_color = color_bottom.lerp(color_top, t);
+            std::optional<rt::HitRecord> hit_record = sphere.hit(curr_ray, interval);
+            rt::Color pixel_color;
+
+            if (hit_record) {
+                pixel_color = 0.5f * (hit_record->outward_normal + rt::Color(1, 1, 1));
+            } else {
+                pixel_color = color_bottom.lerp(color_top, t);
+            }
 
             image.at(x, y) = {pixel_color.get_x(), pixel_color.get_y(), pixel_color.get_z()};
         }
