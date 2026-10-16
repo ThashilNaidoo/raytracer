@@ -10,10 +10,10 @@
 #include "render/camera.hpp"
 #include "render/image.hpp"
 
-// Pipeline smoke test: renders a gradient so you can confirm the build, PNG
-// output and sRGB conversion all work before any ray tracing exists.
-// Week 1 replaces the body of the pixel loop with camera rays + ray_color().
 int main(int argc, char** argv) {
+    // ============================================================================================================================================ //
+    //                                                                    Setup                                                                     //
+    // ============================================================================================================================================ //
     const std::string out_path = argc > 1 ? argv[1] : "output/render.png";
 
     constexpr int width = 640;
@@ -26,15 +26,21 @@ int main(int argc, char** argv) {
     const rt::Color color_bottom(1.0f, 1.0f, 1.0f);
     const rt::Color color_top(1.0f, 0.5f, 0.2f);
 
+    // ============================================================================================================================================ //
+    //                                                                    Scene                                                                     //
+    // ============================================================================================================================================ //
     const rt::Point3 sphere_centre(0, 0, -1);
 
     const rt::Point3 floor_sphere_centre(0, -100.5, -1);
 
-    const rt::Interval interval(0, std::numeric_limits<float>::infinity());
-
     rt::HittableList hittable_list;
     hittable_list.add_hittable(std::make_unique<rt::Sphere>(sphere_centre, 0.5f));
     hittable_list.add_hittable(std::make_unique<rt::Sphere>(floor_sphere_centre, 100.0f));
+
+    // ============================================================================================================================================ //
+    //                                                                 Render Loop                                                                  //
+    // ============================================================================================================================================ //
+    const rt::Interval interval(0, std::numeric_limits<float>::infinity());
 
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
@@ -55,6 +61,9 @@ int main(int argc, char** argv) {
         }
     }
 
+    // ============================================================================================================================================ //
+    //                                                                    Output                                                                    //
+    // ============================================================================================================================================ //
     const auto elapsed = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - start);
 
     const std::filesystem::path out(out_path);

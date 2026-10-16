@@ -9,7 +9,14 @@ class HittableList : public rt::Hittable {
     std::vector<std::unique_ptr<rt::Hittable>> hittable_list;
 
 public:
+    // ============================================================================================================================================ //
+    //                                                                Adding Objects                                                                //
+    // ============================================================================================================================================ //
     void add_hittable(std::unique_ptr<rt::Hittable> new_hittable) { hittable_list.push_back(std::move(new_hittable)); }
+
+    // ============================================================================================================================================ //
+    //                                                                 Hit Function                                                                 //
+    // ============================================================================================================================================ //
     [[nodiscard]] std::optional<rt::HitRecord> hit(const rt::Ray& ray, rt::Interval interval) const override {
         std::optional<rt::HitRecord> closest_hit;
         for (const auto& hittable : hittable_list) {
