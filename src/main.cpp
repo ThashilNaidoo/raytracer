@@ -2,8 +2,10 @@
 #include <cstdio>
 #include <filesystem>
 #include <limits>
+#include <memory>
 #include <string>
 
+#include "geometry/hittable_list.hpp"
 #include "geometry/sphere.hpp"
 #include "render/camera.hpp"
 #include "render/image.hpp"
@@ -24,8 +26,15 @@ int main(int argc, char** argv) {
     const rt::Color color_bottom(1.0f, 1.0f, 1.0f);
     const rt::Color color_top(1.0f, 0.5f, 0.2f);
 
-    const rt::Sphere sphere(rt::Point3(0, 0, -1), 0.5f);
+    const rt::Point3 sphere_centre(0, 0, -1);
+
+    const rt::Point3 floor_sphere_centre(0, -100.5, -1);
+
     const rt::Interval interval(0, std::numeric_limits<float>::infinity());
+
+    rt::HittableList hittable_list;
+    hittable_list.add_hittable(std::make_unique<rt::Sphere>(sphere_centre, 0.5f));
+    hittable_list.add_hittable(std::make_unique<rt::Sphere>(floor_sphere_centre, 100.0f));
 
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
@@ -33,7 +42,7 @@ int main(int argc, char** argv) {
             rt::Vec3 ray_normalized_direction = curr_ray.get_direction().unit_vector();
 
             float t = 0.5f * (ray_normalized_direction.get_y() + 1);
-            std::optional<rt::HitRecord> hit_record = sphere.hit(curr_ray, interval);
+            std::optional<rt::HitRecord> hit_record = hittable_list.hit(curr_ray, interval);
             rt::Color pixel_color;
 
             if (hit_record) {
@@ -46,8 +55,7 @@ int main(int argc, char** argv) {
         }
     }
 
-    const auto elapsed =
-        std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - start);
+    const auto elapsed = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - start);
 
     const std::filesystem::path out(out_path);
     if (out.has_parent_path()) {
