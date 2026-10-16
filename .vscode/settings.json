@@ -8,7 +8,7 @@
   "cmake.useCMakePresets": "always",
   "cmake.configureOnOpen": true,
   "editor.formatOnSave": true,
-  "editor.rulers": [100],
+  "editor.rulers": [150],
   "[cpp]": { "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd" },
   "files.associations": { "*.hpp": "cpp" },
   "files.eol": "\n"
