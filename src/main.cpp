@@ -7,6 +7,7 @@
 
 #include "geometry/hittable_list.hpp"
 #include "geometry/sphere.hpp"
+#include "math/rng.hpp"
 #include "render/camera.hpp"
 #include "render/image.hpp"
 
@@ -18,6 +19,7 @@ int main(int argc, char** argv) {
 
     constexpr int width = 640;
     constexpr int height = 360;
+    constexpr int samples_per_pixel = 100;
 
     const auto start = std::chrono::steady_clock::now();
 
@@ -44,19 +46,26 @@ int main(int argc, char** argv) {
 
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
-            rt::Ray curr_ray = camera.get_ray(x, y);
-            rt::Vec3 ray_normalized_direction = curr_ray.get_direction().unit_vector();
-
-            float t = 0.5f * (ray_normalized_direction.get_y() + 1);
-            std::optional<rt::HitRecord> hit_record = hittable_list.hit(curr_ray, interval);
             rt::Color pixel_color;
+            rt::RNG rng(2814, static_cast<std::uint64_t>(y * width + x));
 
-            if (hit_record) {
-                pixel_color = 0.5f * (hit_record->outward_normal + rt::Color(1, 1, 1));
-            } else {
-                pixel_color = color_bottom.lerp(color_top, t);
+            for (int sample = 0; sample < samples_per_pixel; ++sample) {
+                float dx = rng.next_float() - 0.5f;
+                float dy = rng.next_float() - 0.5f;
+                rt::Ray curr_ray = camera.get_ray(static_cast<float>(x) + dx, static_cast<float>(y) + dy);
+                rt::Vec3 ray_normalized_direction = curr_ray.get_direction().unit_vector();
+
+                float t = 0.5f * (ray_normalized_direction.get_y() + 1);
+                std::optional<rt::HitRecord> hit_record = hittable_list.hit(curr_ray, interval);
+
+                if (hit_record) {
+                    pixel_color += 0.5f * (hit_record->outward_normal + rt::Color(1, 1, 1));
+                } else {
+                    pixel_color += color_bottom.lerp(color_top, t);
+                }
             }
 
+            pixel_color /= samples_per_pixel;
             image.at(x, y) = {pixel_color.get_x(), pixel_color.get_y(), pixel_color.get_z()};
         }
     }

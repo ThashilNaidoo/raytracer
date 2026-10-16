@@ -18,8 +18,8 @@ public:
     // ============================================================================================================================================ //
     //                                                                 Ray Function                                                                 //
     // ============================================================================================================================================ //
-    constexpr Ray get_ray(int i, int j) const {
-        Point3 destination = first_pixel_centre_ + static_cast<float>(i) * horizontal_pixel_step_ + static_cast<float>(j) * vertical_pixel_step_;
+    constexpr Ray get_ray(float i, float j) const {
+        Point3 destination = first_pixel_centre_ + i * horizontal_pixel_step_ + j * vertical_pixel_step_;
 
         Vec3 direction = destination - eye_position_;
 
