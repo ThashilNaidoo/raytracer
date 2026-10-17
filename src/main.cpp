@@ -1,7 +1,6 @@
 #include <chrono>
 #include <cstdio>
 #include <filesystem>
-#include <limits>
 #include <memory>
 #include <string>
 
@@ -10,6 +9,7 @@
 #include "math/rng.hpp"
 #include "render/camera.hpp"
 #include "render/image.hpp"
+#include "render/integrator.hpp"
 
 int main(int argc, char** argv) {
     // ============================================================================================================================================ //
@@ -19,14 +19,13 @@ int main(int argc, char** argv) {
 
     constexpr int width = 640;
     constexpr int height = 360;
-    constexpr int samples_per_pixel = 100;
+    constexpr int samples_per_pixel = 1000;
+    constexpr int path_trace_depth = 50;
 
     const auto start = std::chrono::steady_clock::now();
 
     rt::Image image(width, height);
     rt::Camera camera(width, height);
-    const rt::Color color_bottom(1.0f, 1.0f, 1.0f);
-    const rt::Color color_top(1.0f, 0.5f, 0.2f);
 
     // ============================================================================================================================================ //
     //                                                                    Scene                                                                     //
@@ -42,8 +41,6 @@ int main(int argc, char** argv) {
     // ============================================================================================================================================ //
     //                                                                 Render Loop                                                                  //
     // ============================================================================================================================================ //
-    const rt::Interval interval(0, std::numeric_limits<float>::infinity());
-
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             rt::Color pixel_color;
@@ -53,16 +50,8 @@ int main(int argc, char** argv) {
                 float dx = rng.next_float() - 0.5f;
                 float dy = rng.next_float() - 0.5f;
                 rt::Ray curr_ray = camera.get_ray(static_cast<float>(x) + dx, static_cast<float>(y) + dy);
-                rt::Vec3 ray_normalized_direction = curr_ray.get_direction().unit_vector();
 
-                float t = 0.5f * (ray_normalized_direction.get_y() + 1);
-                std::optional<rt::HitRecord> hit_record = hittable_list.hit(curr_ray, interval);
-
-                if (hit_record) {
-                    pixel_color += 0.5f * (hit_record->outward_normal + rt::Color(1, 1, 1));
-                } else {
-                    pixel_color += color_bottom.lerp(color_top, t);
-                }
+                pixel_color += rt::trace_path(curr_ray, hittable_list, path_trace_depth, rng);
             }
 
             pixel_color /= samples_per_pixel;

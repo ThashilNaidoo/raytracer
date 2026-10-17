@@ -42,6 +42,7 @@ endfunction()
 add_library(rt_core
   src/render/image.cpp
   src/render/camera.cpp
+  src/render/integrator.cpp
 )
 target_include_directories(rt_core PUBLIC src)
 target_include_directories(rt_core SYSTEM PRIVATE third_party)  # silence warnings in vendored code
